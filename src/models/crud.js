@@ -7,22 +7,30 @@ module.exports = {
 
         //if id is specified
         if (data.id) {
-            this.update(data);
-            return;
+            res = await this.update(data);
+            return res;
         }
-        let res;
-        try {
-            res = await db.collection.insertOne(data);
-        } catch(e) {
-            console.log(e);
-        } finally {
-            db.client.close();
-        }
-        return res;
+
+        return new Promise(async (resolve, reject) => {
+            let res;
+
+
+
+            
+            try {
+                res = await db.collection.insertOne(data);
+                db.client.close();
+                resolve(res);
+            } catch(e) {
+                reject(e);
+            }
+        });
+
     },
     readOne: async function(data) {
         let db = await database.getDb();
         let res;
+
         try {
             res = await db.collection.findOne({"_id": Objectid(data.id)});
         } catch(e) {
@@ -46,23 +54,24 @@ module.exports = {
     },
     update: async function(data) {
         let db = await database.getDb();
-        let res;
-        
 
-        try {
-            res = await db.collection.updateOne(
-                {"_id": Objectid(data.id)}, 
-                {$set: {
-                    name: data.name, 
-                    content: data.content
-                }}
-            );
-        } catch(e) {
-            console.log(e);
-        } finally {
-            db.client.close();
-        }
-        return res;
+        return new Promise(async (resolve, reject) => {
+            let res;
+            
+            try {
+                res = await db.collection.updateOne(
+                    {"_id": Objectid(data.id)}, 
+                    {$set: {
+                        name: data.name, 
+                        content: data.content
+                    }}
+                );
+                db.client.close();
+                resolve(res);
+            } catch(e) {
+                reject(e);
+            }
+        });
     },
     delete: async function(data) {
         let db = await database.getDb();

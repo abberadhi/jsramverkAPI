@@ -11,8 +11,8 @@ router.post("/", async (req, res) => {
     console.log(req.body)
 
     try {
-        let output = await crud.create(req.body);
-        res.json({output});
+        crud.create(req.body).then((output) => res.json({output}));
+        
     } catch (e) {
         res.status(404).json({msg: "could not find what u were looking for", error: e})
     }
