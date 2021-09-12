@@ -1,11 +1,13 @@
 const express = require('express');
 const index = require('./routes/index');
+const update = require('./routes/update');
 const port = 1337;
 
 const app = require('./middlewares/mw.js')(express());
 
 // index route
 app.use('/', index);
+app.use('/update', update);
 
 // Add routes for 404 and error handling
 // Catch 404 and forward to error handler
