@@ -1,5 +1,5 @@
 let database = require('../db/database');
-const Objectid = require("mongodb").ObjectId;
+const ObjectId = require("mongodb").ObjectId;
 
 module.exports = {
     create: async function (data) {
@@ -14,9 +14,6 @@ module.exports = {
         return new Promise(async (resolve, reject) => {
             let res;
 
-
-
-            
             try {
                 res = await db.collection.insertOne(data);
                 db.client.close();
@@ -27,30 +24,39 @@ module.exports = {
         });
 
     },
-    readOne: async function(data) {
+    findAll: async function() {
         let db = await database.getDb();
         let res;
 
-        try {
-            res = await db.collection.findOne({"_id": Objectid(data.id)});
-        } catch(e) {
-            console.log(e);
-        } finally {
-            db.client.close();
-        }
-        return res;
+        return new Promise(async (resolve, reject) => {
+            try {
+                res = db.collection.find();
+                console.log(res);
+                resolve(res);
+                
+            } catch(e) {
+                reject(e);
+            }
+            finally {
+                db.client.close();
+            }
+        });
     },
-    readMultiple: async function(data) {
+    find: async function() {
         let db = await database.getDb();
         let res;
-        try {
-            res = await db.collection.find(data);
-        } catch(e) {
-            console.log(e);
-        } finally {
-            db.client.close();
-        }
-        return res;
+
+        return new Promise(async (resolve, reject) => {
+            try {
+                res = await db.collection.findOne({"_id": ObjectId(data.id)});
+                resolve(res);
+            } catch(e) {
+                reject(e);
+            }
+            finally {
+                db.client.close();
+            }
+        });
     },
     update: async function(data) {
         let db = await database.getDb();
@@ -60,30 +66,34 @@ module.exports = {
             
             try {
                 res = await db.collection.updateOne(
-                    {"_id": Objectid(data.id)}, 
+                    {"_id": ObjectId(data.id)}, 
                     {$set: {
                         name: data.name, 
                         content: data.content
                     }}
                 );
-                db.client.close();
                 resolve(res);
             } catch(e) {
                 reject(e);
+            }
+            finally {
+                db.client.close();
             }
         });
     },
     delete: async function(data) {
         let db = await database.getDb();
-
         let res;
-        try {
-            res = await db.collection.deleteOne({"_id": Objectid(data.id)});
-        } catch(e) {
-            console.log(e);
-        } finally {
-            db.client.close();
-        }
-        return res;
+
+        return new Promise(async (resolve, reject) => {
+            try {
+                res = await db.collection.deleteOne({"_id": ObjectId(data.id)});
+                resolve(res);
+            } catch(e) {
+                reject(e);
+            } finally {
+                db.client.close();
+            }
+        })
     }
 }

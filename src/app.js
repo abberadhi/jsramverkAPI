@@ -1,6 +1,9 @@
 const express = require('express');
 const index = require('./routes/index');
 const update = require('./routes/update');
+const find = require('./routes/find');
+const findAll = require('./routes/findall');
+const rm = require('./routes/delete');
 const port = 1337;
 
 const app = require('./middlewares/mw.js')(express());
@@ -8,6 +11,9 @@ const app = require('./middlewares/mw.js')(express());
 // index route
 app.use('/', index);
 app.use('/update', update);
+app.use('/delete', rm);
+app.use('/findall', findAll);
+app.use('/find', find);
 // app.use('/update', update);
 // app.use('/update', update);
 
