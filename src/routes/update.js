@@ -4,7 +4,9 @@ var router = express.Router();
 var database = require('../db/database');
 
 router.post("/", (req, res) => {
-    console.log(req.body);
+    console.log(req.body)
+
+    
 
     res.json(req.body);
 });

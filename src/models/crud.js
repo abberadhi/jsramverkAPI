@@ -1,10 +1,9 @@
 let database = require('../db/database');
 const Objectid = require("mongodb").ObjectId;
 
-let a = {
+module.exports = {
     create: async function (data) {
         let db = await database.getDb();
-
 
         //if id is specified
         if (data.id) {
@@ -21,7 +20,6 @@ let a = {
         }
         return res;
     },
-
     readOne: async function(data) {
         let db = await database.getDb();
         let res;
@@ -34,7 +32,6 @@ let a = {
         }
         return res;
     },
-
     readMultiple: async function(data) {
         let db = await database.getDb();
         let res;
@@ -47,7 +44,6 @@ let a = {
         }
         return res;
     },
-
     update: async function(data) {
         let db = await database.getDb();
         let res;
@@ -82,5 +78,3 @@ let a = {
         return res;
     }
 }
-
-a.readOne({"id": "613df7bed2cd8d9d95abdd7c"});
