@@ -15,6 +15,10 @@ module.exports = {
             let res;
 
             try {
+                let cd = new Date();
+                data.created = cd;
+                data.updated = cd;
+
                 res = await db.collection.insertOne(data);
                 db.client.close();
                 resolve(res);
@@ -68,7 +72,8 @@ module.exports = {
                     {"_id": ObjectId(data.id)}, 
                     {$set: {
                         name: data.name, 
-                        content: data.content
+                        content: data.content,
+                        updated: new Date()
                     }}
                 );
                 resolve(res);
