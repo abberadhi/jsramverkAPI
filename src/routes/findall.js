@@ -11,7 +11,7 @@ router.post("/", async (req, res) => {
     console.log(req.body)
 
     try {
-        crud.findAll().then((output) => res.status(200).json({output}));
+        crud.findAll().then((output) => res.status(200).json(output));
     } catch (e) {
         res.status(404).json({msg: "could not find what u were looking for", error: e})
     }

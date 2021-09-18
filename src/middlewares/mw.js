@@ -3,7 +3,6 @@ const cors = require('cors');
 const morgan = require('morgan');
 
 module.exports = (app) => {
-
     app.use(cors());
 
     // don't show the log when it is test
@@ -21,5 +20,4 @@ module.exports = (app) => {
     });
 
     return app;
-
 }

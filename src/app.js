@@ -1,12 +1,31 @@
+
 const express = require('express');
 const index = require('./routes/index');
 const update = require('./routes/update');
 const find = require('./routes/find');
 const findAll = require('./routes/findall');
+const morgan = require('morgan');
 const rm = require('./routes/delete');
 const port = 1337;
 
-const app = require('./middlewares/mw.js')(express());
+var app = express();
+
+var cors = require('cors');
+app.use(cors());
+
+ // don't show the log when it is test
+ if (process.env.NODE_ENV !== 'test') {
+    // use morgan to log at command line
+    app.use(morgan('combined')); // 'combined' outputs the Apache style LOGs
+}
+
+app.use(express.json());
+
+app.use((req, res, next) => {
+    console.log(req.method);
+    console.log(req.path);
+    next();
+});
 
 // index route
 app.use('/', index);
