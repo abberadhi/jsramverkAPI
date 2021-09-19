@@ -16,6 +16,7 @@ module.exports = {
 
             try {
                 let cd = new Date();
+                data.name = "Untitled";
                 data.created = cd;
                 data.updated = cd;
 
