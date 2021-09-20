@@ -1,12 +1,14 @@
 const mongo = require("mongodb").MongoClient;
 const collectionName = "documents";
 
+require('dotenv').config()
+
 const database = {
     getDb: async function getDb() {
-        let dsn = `mongodb://localhost:27017/genericdocs`;
+        let dsn = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.vhks9.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
 
         if (process.env.NODE_ENV === 'test') {
-            dsn = "mongodb://localhost:27017/genericdocs";
+            dsn = "mongodb+srv://abbe:hIukECQkbh9nTTFE@cluster0.vhks9.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
         }
 
         const client  = await mongo.connect(dsn, {
