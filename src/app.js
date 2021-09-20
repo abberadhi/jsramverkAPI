@@ -6,11 +6,12 @@ const find = require('./routes/find');
 const findAll = require('./routes/findall');
 const morgan = require('morgan');
 const rm = require('./routes/delete');
-const port = 1337;
+const port = process.env.PORT || 1337;
 
 var app = express();
 
 var cors = require('cors');
+
 app.use(cors());
 
  // don't show the log when it is test
