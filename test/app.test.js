@@ -3,11 +3,17 @@ process.env.NODE_ENV = 'test';
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const server = require('../src/app');
+const database = require('../src/db/database');
 
 chai.should();
 
 chai.use(chaiHttp);
 
+
+after(async() => {
+    let db = await database.getDb();
+    db.collection.deleteMany({});
+})
 
 describe('app', () => {
     describe('get /', () => {
@@ -17,6 +23,7 @@ describe('app', () => {
                 .end((err, res) => {
                     res.should.have.status(200);
                     res.text.should.be.a("string");
+                    
                     done();
                 });
         });
@@ -33,6 +40,8 @@ describe('app', () => {
                     res.should.have.status(200);
                     res.text.should.be.a("string");
 
+                    console.log(res);
+
                     done();
                 });
         });
@@ -46,7 +55,7 @@ describe('app', () => {
                 .post("/update")
                 .send({})
                 .end((err, res) => {
-                    res.should.have.status(200);
+                    res.should.have.status(201);
                     res.text.should.be.a("string");
 
                     done();
