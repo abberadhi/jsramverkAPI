@@ -1,5 +1,5 @@
 const mongo = require("mongodb").MongoClient;
-const collectionName = "documents";
+let collectionName = "documents";
 
 require('dotenv').config()
 

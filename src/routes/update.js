@@ -10,7 +10,8 @@ var crud = require('../models/crud');
 router.post("/", async (req, res) => {
 
     try {
-        crud.create(req.body).then((output) => res.status(201).json(output));
+        let output = await crud.create(req.body);
+        res.status(201).json(output)
     } catch (e) {
         res.status(404).json({msg: "could not find what u were looking for", error: e})
     }

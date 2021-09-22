@@ -23,11 +23,28 @@ describe('app', () => {
     });
 });
 
+// rewrite
 describe('app', () => {
     describe('POST /', () => {
         it('test fetching all data', (done) => {
             chai.request(server)
                 .post("/findall")
+                .end((err, res) => {
+                    res.should.have.status(200);
+                    res.text.should.be.a("string");
+
+                    done();
+                });
+        });
+    });
+});
+
+describe('app', () => {
+    describe('POST /create', () => {
+        it('creating new ', (done) => {
+            chai.request(server)
+                .post("/update")
+                .send({})
                 .end((err, res) => {
                     res.should.have.status(200);
                     res.text.should.be.a("string");
