@@ -36,7 +36,6 @@ module.exports = {
         return new Promise(async (resolve, reject) => {
             try {
                 res = await db.collection.find().sort( { "_id": 1 } ).toArray();
-                console.log(res);
                 resolve(res);
             } catch(e) {
                 reject(e);

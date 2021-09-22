@@ -8,7 +8,6 @@ var crud = require('../models/crud');
  * expecting id (optional), name, content 
  */
 router.post("/", async (req, res) => {
-    console.log(req.body)
 
     try {
         crud.delete(req.body).then((output) => res.status(201).json(output));

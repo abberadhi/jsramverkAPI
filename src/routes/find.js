@@ -8,7 +8,6 @@ var crud = require('../models/crud');
  * expecting id
  */
 router.post("/", async (req, res) => {
-    console.log(req.body)
 
     try {
         crud.find(req.body).then((output) => res.status(200).json(output));

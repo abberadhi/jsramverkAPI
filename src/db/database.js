@@ -8,6 +8,7 @@ const database = {
         let dsn = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.vhks9.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
 
         if (process.env.NODE_ENV === 'test') {
+            collectionName = "test"
             dsn = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.vhks9.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
 
         }
