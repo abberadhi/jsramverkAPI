@@ -37,7 +37,6 @@ describe('app', () => {
                 .send({})
                 .end((err, res) => {
                     res.should.have.status(201);
-                    console.log(res.body);
                     res.body.acknowledged.should.equal(true);
                     res.body.insertedId.should.be.an("string");
 
@@ -85,7 +84,6 @@ describe('app', () => {
                 .post("/update")
                 .send({"id": entryId, "name": "new name", "content": "<h1>hello</h1>"})
                 .end((err, res) => {
-                    // console.log(res);
                     res.should.have.status(201);
                     res.body.acknowledged.should.equal(true);
                     res.body.modifiedCount.should.equal(1);
@@ -96,7 +94,7 @@ describe('app', () => {
     });
 
     describe('POST /find', () => {
-        it('check that doc is updated with correct content', (done) => {
+        it('checking that doc is updated with correct content', (done) => {
             chai.request(server)
                 .post("/find")
                 .send({"id": entryId})
@@ -111,7 +109,7 @@ describe('app', () => {
     });
 
     describe('POST /delete', () => {
-        it('delete a doc by id', (done) => {
+        it('deleting a doc by id', (done) => {
             chai.request(server)
                 .post("/delete")
                 .send({"id": entryId})
@@ -120,6 +118,21 @@ describe('app', () => {
 
                     res.body.deletedCount.should.equal(1);
                     res.body.acknowledged.should.equal(true);
+
+                    done();
+                });
+        });
+    });
+
+
+    describe('POST /delete', () => {
+        it('delete a non existent document. should result in failure', (done) => {
+            chai.request(server)
+                .post("/delete")
+                .send({"id": "non existnt"})
+                .end((err, res) => {
+                    res.should.have.status(404);
+                    res.body.msg.should.be.a("string", "could not find what u were looking for");
 
                     done();
                 });
