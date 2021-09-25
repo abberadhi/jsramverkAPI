@@ -21,7 +21,6 @@ describe('app', () => {
             chai.request(server)
                 .post("/findall")
                 .end((err, res) => {
-                    console.log(res);
                     res.should.have.status(200);
                     res.body.should.be.an("array");
                     res.body.length.should.be.below(1);
@@ -134,6 +133,18 @@ describe('app', () => {
                 .end((err, res) => {
                     res.should.have.status(404);
                     res.body.msg.should.be.a("string", "could not find what u were looking for");
+
+                    done();
+                });
+        });
+    });
+
+    describe('POST /index', () => {
+        it('delete a non existent document. should result in failure', (done) => {
+            chai.request(server)
+                .get("/")
+                .end((err, res) => {
+                    res.should.have.status(200);
 
                     done();
                 });
