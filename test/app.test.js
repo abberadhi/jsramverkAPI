@@ -21,6 +21,7 @@ describe('app', () => {
             chai.request(server)
                 .post("/findall")
                 .end((err, res) => {
+                    console.log(res);
                     res.should.have.status(200);
                     res.body.should.be.an("array");
                     res.body.length.should.be.below(1);
