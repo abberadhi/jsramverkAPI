@@ -13,7 +13,6 @@ chai.use(chaiHttp);
 after(async() => {
     let db = await database.getDb();
     db.collection.deleteMany({});
-    console.log(db);
 })
 
 describe('app', () => {
