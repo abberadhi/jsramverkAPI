@@ -1,3 +1,5 @@
+[![Build Status](https://app.travis-ci.com/abberadhi/jsramverkAPI.svg?branch=master)](https://app.travis-ci.com/abberadhi/jsramverkAPI)
+
 generiic document editor
 =========
 The api is structured such that `app.js` is the entry point and routes are loaded in from `src/routes/`, which uses `src/models/` for functionality. 
