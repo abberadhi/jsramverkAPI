@@ -1,20 +1,22 @@
 const e = require('express');
-var express = require('express');
-var router = express.Router();
+let express = require('express');
+let router = express.Router();
+let Doc = require('../models/Doc');
 
-var crud = require('../models/crud');
+let crud = require('../models/crud');
 
 /**
  * expecting id
  */
-router.post("/", async (req, res) => {
-
+router.get("/", async (req, res) => {
     try {
-        let output = await crud.find(req.body);
-        res.status(200).json(output)
-    } catch (e) {
-        res.status(404).json({msg: "could not find what u were looking for", error: e})
-    }
+        const document = await Doc.findById(req.params.id);
+        if (!document) throw Error('No document found');
+
+        res.status(200).json({ data: document, success: true });
+      } catch (e) {
+        res.status(400).json({ msg: e.message, success: false });
+      }
 });
 
 module.exports = router;

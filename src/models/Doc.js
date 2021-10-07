@@ -1,4 +1,4 @@
-import { Schema, model } from 'mongoose';
+let { Schema, model } = require('mongoose');
 
 // Create Schema
 const DocumentSchema = new Schema({
@@ -8,6 +8,7 @@ const DocumentSchema = new Schema({
   },
   content: {
     type: String,
+    default: ""
   },
   created: {
     type: Date,
@@ -22,6 +23,6 @@ const DocumentSchema = new Schema({
   }
 });
 
-const Doc = model('doc', DocumentSchema);
+const Doc = model('docs', DocumentSchema);
 
-export default Doc;
+module.exports = Doc;

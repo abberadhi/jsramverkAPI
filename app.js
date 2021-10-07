@@ -9,8 +9,6 @@ var cors = require('cors');
 const mongoose = require('mongoose');
 const { MONGO_URI } = require('./src/config');
 
-
-
 // routes
 const index = require('./src/routes/index');
 const update = require('./src/routes/update');
@@ -40,7 +38,7 @@ io.sockets.on('connection', function(socket) {
 
 // Connect to Mongo
 mongoose
-  .connect("mongodb://127.0.0.1:27017/", {
+  .connect("mongodb://127.0.0.1:27017/docs", {
     useNewUrlParser: true,
     useUnifiedTopology: true
   }) // Adding new mongo url parser
