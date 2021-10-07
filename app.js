@@ -1,11 +1,11 @@
 
 const express = require('express');
-const index = require('./routes/index');
-const update = require('./routes/update');
-const find = require('./routes/find');
-const findAll = require('./routes/findall');
+const index = require('./src/routes/index');
+const update = require('./src/routes/update');
+const find = require('./src/routes/find');
+const findAll = require('./src/routes/findall');
 const morgan = require('morgan');
-const rm = require('./routes/delete');
+const rm = require('./src/routes/delete');
 const port = process.env.PORT || 1337;
 
 var app = express();
