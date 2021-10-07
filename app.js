@@ -40,7 +40,8 @@ io.sockets.on('connection', function(socket) {
 mongoose
   .connect("mongodb://127.0.0.1:27017/docs", {
     useNewUrlParser: true,
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
+    maxPoolSize: 10
   }) // Adding new mongo url parser
   .then(() => console.log('MongoDB Connected...'))
   .catch(err => console.log(err));
