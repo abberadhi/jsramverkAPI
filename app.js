@@ -1,22 +1,27 @@
 
 const express = require('express');
+const morgan = require('morgan');
+const rm = require('./src/routes/delete');
+const port = process.env.PORT || 1337;
+var app = express();
+const httpServer = require("http").createServer(app);
+var cors = require('cors');
+const mongoose = require('mongoose');
+const { MONGO_URI } = require('./src/config');
+
+
+
+// routes
 const index = require('./src/routes/index');
 const update = require('./src/routes/update');
 const find = require('./src/routes/find');
 const findAll = require('./src/routes/findall');
-const morgan = require('morgan');
-const rm = require('./src/routes/delete');
-const port = process.env.PORT || 1337;
 
-var app = express();
-const httpServer = require("http").createServer(app);
-
-var cors = require('cors');
 
 app.use(cors());
 
 
-const io = require("socket.io")(httpServer, {
+const io = require("socket.io")(httpServer, { 
   cors: {
     origin: "*",
     methods: ["GET", "POST"]
@@ -33,6 +38,15 @@ io.sockets.on('connection', function(socket) {
     });
 });
 
+// Connect to Mongo
+mongoose
+  .connect("mongodb://127.0.0.1:27017/", {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  }) // Adding new mongo url parser
+  .then(() => console.log('MongoDB Connected...'))
+  .catch(err => console.log(err));
+
  // don't show the log when it is test
 if (process.env.NODE_ENV !== 'test') {
     // use morgan to log at command line
@@ -41,20 +55,12 @@ if (process.env.NODE_ENV !== 'test') {
 
 app.use(express.json());
 
-// app.use((req, res, next) => {
-//     console.log(req.method);
-//     console.log(req.path);
-//     next();
-// });
-
 // index route
 app.use('/', index);
 app.use('/update', update);
 app.use('/delete', rm);
 app.use('/findall', findAll);
 app.use('/find', find);
-// app.use('/update', update);
-// app.use('/update', update);
 
 // Add routes for 404 and error handling
 // Catch 404 and forward to error handler
