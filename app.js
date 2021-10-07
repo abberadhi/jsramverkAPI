@@ -1,7 +1,6 @@
 
 const express = require('express');
 const morgan = require('morgan');
-const rm = require('./src/routes/delete');
 const port = process.env.PORT || 1337;
 var app = express();
 const httpServer = require("http").createServer(app);
