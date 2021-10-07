@@ -10,16 +10,11 @@ const mongoose = require('mongoose');
 const { MONGO_URI } = require('./src/config');
 
 // routes
-const index = require('./src/routes/index');
-const update = require('./src/routes/update');
-const find = require('./src/routes/find');
-const findAll = require('./src/routes/findall');
-
+const api = require('./src/routes/api/documents');
 
 app.use(cors());
 
-
-const io = require("socket.io")(httpServer, { 
+const io = require("socket.io")(httpServer, {
   cors: {
     origin: "*",
     methods: ["GET", "POST"]
@@ -55,11 +50,7 @@ if (process.env.NODE_ENV !== 'test') {
 app.use(express.json());
 
 // index route
-app.use('/', index);
-app.use('/update', update);
-app.use('/delete', rm);
-app.use('/findall', findAll);
-app.use('/find', find);
+app.use('/api', api);
 
 // Add routes for 404 and error handling
 // Catch 404 and forward to error handler
