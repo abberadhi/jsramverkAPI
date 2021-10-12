@@ -8,6 +8,11 @@ var cors = require('cors');
 const mongoose = require('mongoose');
 const { MONGO_URI } = require('./src/config');
 
+//temmp
+let Doc = require('./src/models/Doc');
+let graphql, { GraphQLObjectType, GraphQLSchema, GraphQLString, GraphQLInt, GraphQLList } = require('graphql');
+const { graphqlHTTP } = require('express-graphql');
+
 // routes
 const api = require('./src/routes/api/documents');
 
@@ -47,6 +52,57 @@ if (process.env.NODE_ENV !== 'test') {
 }
 
 app.use(express.json());
+
+// graphql
+
+
+// schema
+
+const DocType = new GraphQLObjectType({
+    name: "Document",
+    fields: () => ({
+        id: { type: GraphQLString },
+        name: { type: GraphQLString },
+        content: { type: GraphQLString },
+        created: { type: GraphQLString },
+        updated: { type: GraphQLString }
+    })
+})
+
+const RootQuery = new GraphQLObjectType({
+    name: "RootQueryType",
+    fields: {
+        getAllDocuments: {
+            type: new GraphQLList(DocType),
+            async resolve(parent, args) {
+                return await Doc.find();
+            }
+            // args: { id: { type: GraphQLInt }}
+        },
+        getDocumentById: {
+            type: DocType,
+            args: { id: { type: GraphQLString }},
+            async resolve(parent, args) {
+                return await Doc.findById(args.id);
+            }
+        }
+    }
+});
+
+
+const Mutation = new GraphQLObjectType({
+    name: "Mutation"
+});
+
+const schema = new GraphQLSchema({
+    query: RootQuery,
+    // mutation: Mutation
+})
+
+app.use('/graphql', graphqlHTTP({
+    schema,
+    graphiql: true
+}));
 
 // index route
 app.use('/api', api);
