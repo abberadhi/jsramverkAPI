@@ -109,7 +109,7 @@ const Mutation = new GraphQLObjectType({
                         args.updated = new Date(); // assert current date
                         let doc = await Doc.findByIdAndUpdate(args.id, args, {returnOriginal: false});
                         if (!doc) throw Error('No document with specified id found.');
-                        return doc
+                        return {msg: doc}
                     }  catch (e) {
                         return { msg: e.message };
                     }
@@ -126,7 +126,23 @@ const Mutation = new GraphQLObjectType({
                 return { msg: e.message };
                 }
             }
-        }
+        },
+        deleteDocument: {
+            type: DocType,
+            args: {
+                id: { type: GraphQLString }
+            },
+            async resolve(parent, args) {
+                try {
+                    const document = await Doc.findByIdAndDelete(args.id);
+                    if (!document) throw Error('No document found');
+            
+                    return document;
+                  } catch (e) {
+                    return { msg: e.message, success: false };
+                  }
+            }
+        },
     }
 });
 
