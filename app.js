@@ -91,12 +91,48 @@ const RootQuery = new GraphQLObjectType({
 
 
 const Mutation = new GraphQLObjectType({
-    name: "Mutation"
+    name: "Mutation",
+    fields: {
+        editDocument: {
+            type: DocType,
+            args: {
+                id: { type: GraphQLString },
+                name: { type: GraphQLString },
+                content: { type: GraphQLString },
+                created: { type: GraphQLString },
+                updated: { type: GraphQLString }
+            },
+            async resolve(parent, args) {
+                // if id specified, update existing
+                if (args.id) {
+                    try {
+                        args.updated = new Date(); // assert current date
+                        let doc = await Doc.findByIdAndUpdate(args.id, args, {returnOriginal: false});
+                        if (!doc) throw Error('No document with specified id found.');
+                        return doc
+                    }  catch (e) {
+                        return { msg: e.message };
+                    }
+                }
+            
+                // below triggers if no id is specified, then new document is created.
+                const newDoc = new Doc(args);
+
+                try {
+                const doc = await newDoc.save();
+                if (!doc) throw Error('Something went wrong saving the document');
+                return doc;
+                } catch (e) {
+                return { msg: e.message };
+                }
+            }
+        }
+    }
 });
 
 const schema = new GraphQLSchema({
     query: RootQuery,
-    // mutation: Mutation
+    mutation: Mutation
 })
 
 app.use('/graphql', graphqlHTTP({
