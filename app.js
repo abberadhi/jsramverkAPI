@@ -77,7 +77,6 @@ const RootQuery = new GraphQLObjectType({
             async resolve(parent, args) {
                 return await Doc.find();
             }
-            // args: { id: { type: GraphQLInt }}
         },
         getDocumentById: {
             type: DocType,
@@ -115,15 +114,19 @@ const Mutation = new GraphQLObjectType({
                     }
                 }
             
-                // below triggers if no id is specified, then new document is created.
-                const newDoc = new Doc(args);
+                
 
                 try {
-                const doc = await newDoc.save();
+                    // below triggers if no id is specified, then new document is created.
+                    const newDoc = new Doc(args);
+                    args.updated = new Date(); // assert current date
+                    args.created = new Date(); // assert current date
+
+                    const doc = await newDoc.save();
                 if (!doc) throw Error('Something went wrong saving the document');
-                return doc;
+                    return doc;
                 } catch (e) {
-                return { msg: e.message };
+                    return { msg: e.message };
                 }
             }
         },
