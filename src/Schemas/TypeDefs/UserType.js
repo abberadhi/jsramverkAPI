@@ -9,6 +9,7 @@ const UserType = new GraphQLObjectType({
         password: { type: GraphQLString },
         created: { type: GraphQLString },
         token: { type: GraphQLString },
+        msg: { type: GraphQLString },
     })
 });
 

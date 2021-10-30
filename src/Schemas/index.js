@@ -95,6 +95,14 @@ const Mutation = new GraphQLObjectType({
             },
             resolve: register.register
         },
+        userLogin: {
+            type: UserType,
+            args: {
+                email: { type: GraphQLString },
+                password: { type: GraphQLString },
+            },
+            resolve: register.login
+        },
     }
 });
 
