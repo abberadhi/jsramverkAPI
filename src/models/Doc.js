@@ -18,8 +18,11 @@ const DocumentSchema = new Schema({
     type: Date,
     default: Date.now
   },
-  temp: { // change array to users with access
+  creator: { // change array to users with access
     type: String
+  },
+  access: {
+    type: Array
   }
 });
 

@@ -3,6 +3,13 @@ let Doc = require('../models/Doc');
 let graphql, { GraphQLObjectType, GraphQLSchema, GraphQLString, GraphQLInt, GraphQLList } = require('graphql');
 const { graphqlHTTP } = require('express-graphql');
 const DocType = require('./TypeDefs/DocType');
+const UserType = require('./TypeDefs/UserType');
+
+// user resolver
+const register = require('./resolvers/userResolvers');
+
+console.log(register)
+console.log(register.register)
 
 const RootQuery = new GraphQLObjectType({
     name: "RootQueryType",
@@ -47,8 +54,8 @@ const Mutation = new GraphQLObjectType({
                         return { msg: e.message };
                     }
                 }
-            
-                
+                console.log("entering resolve0")
+
 
                 try {
                     // below triggers if no id is specified, then new document is created.
@@ -79,6 +86,14 @@ const Mutation = new GraphQLObjectType({
                     return { msg: e.message, success: false };
                   }
             }
+        },
+        registerUser: {
+            type: UserType,
+            args: {
+                email: { type: GraphQLString },
+                password: { type: GraphQLString },
+            },
+            resolve: register.register
         },
     }
 });

@@ -11,6 +11,8 @@ const { MONGO_URI } = require('./src/config');
 const { graphqlHTTP } = require('express-graphql');
 const schema = require('./src/Schemas')
 
+require('dotenv').config()
+
 // routes
 const api = require('./src/routes/api/documents');
 
@@ -35,7 +37,8 @@ io.sockets.on('connection', function(socket) {
 
 // Connect to Mongo
 mongoose
-  .connect("mongodb://127.0.0.1:27017/docs", {
+  //.connect("mongodb://127.0.0.1:27017/docs", {
+  .connect(`mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.vhks9.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     maxPoolSize: 10
