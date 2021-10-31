@@ -61,7 +61,7 @@ module.exports = {
       try {
         // Check for existing user
         const user = await User.findOne({ email });
-        if (!user) throw Error('User does not exist');
+        if (!user) throw Error('Invalid credentials');
     
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) throw Error('Invalid credentials');

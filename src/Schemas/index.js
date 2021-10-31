@@ -8,9 +8,6 @@ const UserType = require('./TypeDefs/UserType');
 // user resolver
 const register = require('./resolvers/userResolvers');
 
-console.log(register)
-console.log(register.register)
-
 const RootQuery = new GraphQLObjectType({
     name: "RootQueryType",
     fields: {
