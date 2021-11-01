@@ -11,6 +11,8 @@ const { MONGO_URI } = require('./src/config');
 const { graphqlHTTP } = require('express-graphql');
 const schema = require('./src/Schemas')
 
+const authMw = require('./src/middlewares/auth');
+
 require('dotenv').config()
 
 // routes
@@ -54,10 +56,26 @@ if (process.env.NODE_ENV !== 'test') {
 
 app.use(express.json());
 
-app.use('/graphql', graphqlHTTP({
-    schema,
-    graphiql: true
-}));
+// app.use('/graphql', graphqlHTTP({
+//     schema,
+//     graphiql: true
+// }));
+
+app.use(authMw);
+
+app.use('/graphql', graphqlHTTP((req, res, graphQLParams) => {
+    console.log(req.headers);
+    // console.log(req);
+    return {
+      schema,
+      graphiql: true,
+      // other options
+      context: {
+        headers: req.headers,
+        // whatever else you want
+      }
+    }
+}))
 
 // index route
 app.use('/api', api);

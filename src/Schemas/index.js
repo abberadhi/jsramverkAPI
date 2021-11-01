@@ -13,7 +13,7 @@ const RootQuery = new GraphQLObjectType({
     fields: {
         getAllDocuments: {
             type: new GraphQLList(DocType),
-            async resolve(parent, args) {
+            async resolve(parent, args, request) {
                 return await Doc.find();
             }
         },

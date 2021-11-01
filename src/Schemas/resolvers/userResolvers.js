@@ -19,10 +19,10 @@ module.exports = {
         if (user) throw Error('User already exists');
     
         const salt = await bcrypt.genSalt(10);
-        if (!salt) throw Error('Something went wrong with bcrypt');
+        if (!salt) throw Error('Something went wrong!');
     
         const hash = await bcrypt.hash(password, salt);
-        if (!hash) throw Error('Something went wrong hashing the password');
+        if (!hash) throw Error('Something went wrong!');
     
         const newUser = new User({
           email,
