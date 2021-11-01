@@ -7,6 +7,7 @@ const DocType = new GraphQLObjectType({
         id: { type: GraphQLString },
         name: { type: GraphQLString },
         content: { type: GraphQLString },
+        creator: { type: GraphQLString },
         created: { type: GraphQLString },
         updated: { type: GraphQLString }
     })

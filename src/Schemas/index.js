@@ -13,8 +13,19 @@ const RootQuery = new GraphQLObjectType({
     fields: {
         getAllDocuments: {
             type: new GraphQLList(DocType),
-            async resolve(parent, args, request) {
-                return await Doc.find();
+            async resolve(parent, args, req) {
+
+                if (!req.isAuth) throw Error('Unauthenticated request!');
+
+                // console.log(req.userId);
+
+                let res = await Doc.find({"creator": req.userId});
+                // let res = await Doc.find();
+
+                console.log(res);
+
+                return res;
+
             }
         },
         getDocumentById: {
@@ -36,13 +47,18 @@ const Mutation = new GraphQLObjectType({
                 id: { type: GraphQLString },
                 name: { type: GraphQLString },
                 content: { type: GraphQLString },
+                creator: { type: GraphQLString },
                 created: { type: GraphQLString },
                 updated: { type: GraphQLString }
             },
-            async resolve(parent, args) {
+            async resolve(parent, args, req) {
+                if (!req.isAuth) throw Error('Unauthenticated request!');
+
                 // if id specified, update existing
                 if (args.id) {
                     try {
+                        // check if user is owner or has access to the specified document
+
                         args.updated = new Date(); // assert current date
                         let doc = await Doc.findByIdAndUpdate(args.id, args, {returnOriginal: false});
                         if (!doc) throw Error('No document with specified id found.');
@@ -51,16 +67,18 @@ const Mutation = new GraphQLObjectType({
                         return { msg: e.message };
                     }
                 }
-                console.log("entering resolve0")
-
 
                 try {
                     // below triggers if no id is specified, then new document is created.
-                    const newDoc = new Doc(args);
+                    args.creator = req.userId; // make logged in user the owner
                     args.updated = new Date(); // assert current date
                     args.created = new Date(); // assert current date
 
+                    const newDoc = new Doc(args);
+
                     const doc = await newDoc.save();
+                    console.log(doc);
+
                 if (!doc) throw Error('Something went wrong saving the document');
                     return doc;
                 } catch (e) {

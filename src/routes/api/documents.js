@@ -36,7 +36,7 @@ router.get("/", async (req, res) => {
  */
 router.post("/", async (req, res) => {
     // if id specified, update existing
-    console.log(req.body, "body");
+
     if (req.body.id) {
         try {
             req.body.updated = new Date(); // assert current date

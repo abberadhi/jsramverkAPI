@@ -9,12 +9,10 @@ module.exports = {
 
       // Simple validation
       if (!email || !password) {
-        console.log("enter try");
         return { msg: 'Please enter all fields', success: false };
       }
     
       try {
-        console.log("enter try");
         const user = await User.findOne({ email });
         if (user) throw Error('User already exists');
     
@@ -28,8 +26,7 @@ module.exports = {
           email,
           password: hash
         });
-    
-        console.log("enter try2");
+
     
         const savedUser = await newUser.save();
         if (!savedUser) throw Error('Something went wrong saving the user');
@@ -38,7 +35,6 @@ module.exports = {
           expiresIn: 3600
         });
     
-        console.log("enter try3");
     
         return {
           token,
@@ -46,7 +42,6 @@ module.exports = {
           email: savedUser.email
         };
       } catch (e) {
-        console.log("fail", e);
         return { msg: e.message, success: false };
       }
     },
@@ -75,7 +70,6 @@ module.exports = {
           email: user.email
         };
       } catch (e) {
-        console.log("fail", e);
         return { msg: e.message, success: false };
       }
     },

@@ -56,26 +56,15 @@ if (process.env.NODE_ENV !== 'test') {
 
 app.use(express.json());
 
-// app.use('/graphql', graphqlHTTP({
-//     schema,
-//     graphiql: true
-// }));
-
 app.use(authMw);
 
-app.use('/graphql', graphqlHTTP((req, res, graphQLParams) => {
-    console.log(req.headers);
-    // console.log(req);
-    return {
-      schema,
-      graphiql: true,
-      // other options
-      context: {
-        headers: req.headers,
-        // whatever else you want
-      }
-    }
-}))
+app.use('/graphql', graphqlHTTP({
+    schema,
+    graphiql: true
+}));
+
+
+
 
 // index route
 app.use('/api', api);
