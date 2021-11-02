@@ -34,11 +34,7 @@ const RootQuery = new GraphQLObjectType({
             async resolve(parent, args, req) {
                 if (!req.isAuth) throw Error('Unauthenticated request!');
 
-                console.log("args", args);
-
                 let res = await Doc.findOne({$or:[{"creator": req.userEmail},{"access": req.userEmail}], "_id": args.id });
-
-                console.log("res", res);
 
                 return res;
             }
@@ -100,12 +96,15 @@ const Mutation = new GraphQLObjectType({
             args: {
                 id: { type: GraphQLString }
             },
-            async resolve(parent, args) {
+            async resolve(parent, args, req) {
                 try {
                     if (!req.isAuth) throw Error('Unauthenticated request!');
 
+                    console.log(args);
 
                     const document = await Doc.findByIdAndDelete(args.id);
+                    console.log(document);
+
                     if (!document) throw Error('No document found');
 
                     return document;
