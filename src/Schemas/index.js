@@ -17,11 +17,11 @@ const RootQuery = new GraphQLObjectType({
 
                 if (!req.isAuth) throw Error('Unauthenticated request!');
 
-                // console.log(req.userId);
+                // console.log(req.userEmail);
 
-                let res = await Doc.find({"creator": req.userId});
+                let res = await Doc.find({$or:[{"creator": req.userEmail},{"access": req.userEmail}]});
+
                 // let res = await Doc.find();
-
                 console.log(res);
 
                 return res;
@@ -30,10 +30,20 @@ const RootQuery = new GraphQLObjectType({
         },
         getDocumentById: {
             type: DocType,
-            args: { id: { type: GraphQLString }},
-            async resolve(parent, args) {
-                return await Doc.findById(args.id);
+            args: { id: { type: GraphQLString } },
+            async resolve(parent, args, req) {
+                if (!req.isAuth) throw Error('Unauthenticated request!');
+
+                console.log("args", args);
+
+                let res = await Doc.findOne({$or:[{"creator": req.userEmail},{"access": req.userEmail}], "_id": args.id });
+
+                console.log("res", res);
+
+                return res;
             }
+            
+
         }
     }
 });
@@ -60,26 +70,25 @@ const Mutation = new GraphQLObjectType({
                         // check if user is owner or has access to the specified document
 
                         args.updated = new Date(); // assert current date
-                        let doc = await Doc.findByIdAndUpdate(args.id, args, {returnOriginal: false});
+                        let doc = await Doc.findByIdAndUpdate(args.id, args, { returnOriginal: false });
                         if (!doc) throw Error('No document with specified id found.');
-                        return {msg: doc}
-                    }  catch (e) {
+                        return { msg: doc }
+                    } catch (e) {
                         return { msg: e.message };
                     }
                 }
 
                 try {
                     // below triggers if no id is specified, then new document is created.
-                    args.creator = req.userId; // make logged in user the owner
+                    args.creator = req.userEmail; // make logged in user the owner
                     args.updated = new Date(); // assert current date
                     args.created = new Date(); // assert current date
 
                     const newDoc = new Doc(args);
 
                     const doc = await newDoc.save();
-                    console.log(doc);
 
-                if (!doc) throw Error('Something went wrong saving the document');
+                    if (!doc) throw Error('Something went wrong saving the document');
                     return doc;
                 } catch (e) {
                     return { msg: e.message };
@@ -93,13 +102,32 @@ const Mutation = new GraphQLObjectType({
             },
             async resolve(parent, args) {
                 try {
+                    if (!req.isAuth) throw Error('Unauthenticated request!');
+
+
                     const document = await Doc.findByIdAndDelete(args.id);
                     if (!document) throw Error('No document found');
-            
+
                     return document;
-                  } catch (e) {
+                } catch (e) {
                     return { msg: e.message, success: false };
-                  }
+                }
+            }
+        },
+        addUser: {
+            type: DocType,
+            args: {
+                id: { type: GraphQLString },
+                email: { type: GraphQLString }
+            },
+            async resolve(parent, args, req) {
+                if (!req.isAuth) throw Error('Unauthenticated request!');
+
+                await Doc.updateOne(
+                    { "_id": args.id },
+                    { $addToSet: { access: [args.email] } }
+                )
+
             }
         },
         registerUser: {
