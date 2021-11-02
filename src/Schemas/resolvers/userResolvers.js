@@ -2,6 +2,7 @@ const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken');
 const User = require('../../models/User');
 
+require('dotenv').config()
 
 module.exports = {
     register: async (parent, args) => {
@@ -31,7 +32,7 @@ module.exports = {
         const savedUser = await newUser.save();
         if (!savedUser) throw Error('Something went wrong saving the user');
     
-        const token = jwt.sign({ id: savedUser._id }, "JWT_SECRET", {
+        const token = jwt.sign({ id: savedUser._id }, process.env.JWT_SECRET, {
           expiresIn: 3600
         });
     
@@ -61,7 +62,7 @@ module.exports = {
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) throw Error('Invalid credentials');
     
-        const token = jwt.sign({ id: user._id }, "JWT_SECRET", { expiresIn: 3600 });
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: 3600 });
         if (!token) throw Error('Couldnt sign the token');
     
         return {
