@@ -53,6 +53,7 @@ const Mutation = new GraphQLObjectType({
                 id: { type: GraphQLString },
                 name: { type: GraphQLString },
                 content: { type: GraphQLString },
+                type: { type: GraphQLString },
                 creator: { type: GraphQLString },
                 created: { type: GraphQLString },
                 updated: { type: GraphQLString }
@@ -64,7 +65,6 @@ const Mutation = new GraphQLObjectType({
                 if (args.id) {
                     try {
                         // check if user is owner or has access to the specified document
-
                         args.updated = new Date(); // assert current date
                         let doc = await Doc.findByIdAndUpdate(args.id, args, { returnOriginal: false });
                         if (!doc) throw Error('No document with specified id found.');
