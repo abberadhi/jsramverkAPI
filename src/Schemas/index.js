@@ -8,6 +8,9 @@ const UserType = require('./TypeDefs/UserType');
 // user resolver
 const register = require('./resolvers/userResolvers');
 
+// sendgrid
+const sgMail = require('@sendgrid/mail')
+
 const RootQuery = new GraphQLObjectType({
     name: "RootQueryType",
     fields: {
@@ -89,6 +92,34 @@ const Mutation = new GraphQLObjectType({
                 } catch (e) {
                     return { msg: e.message };
                 }
+            }
+        },
+        sendMail: {
+            type: DocType,
+            args: {
+                id: { type: GraphQLString },
+                to: { type: GraphQLString },
+            },
+            async resolve(parent, args, req) {
+                if (!req.isAuth) throw Error('Unauthenticated request!');
+
+                let res = await Doc.findOne({$or:[{"creator": req.userEmail},{"access": req.userEmail}], "_id": args.id });
+
+                sgMail.setApiKey(process.env.SENDGRID_APIKEY)
+                const msg = {
+                    to: args.to, // Change to your recipient
+                    from: "abbe.radhi11@gmail.com", // Change to your verified sender
+                    subject: 'You got an invitation!',
+                    text: `You got an invitation from ${req.userEmail} to join the document "${res.name}". Join here! http://www.student.bth.se/~abra19/editor/`
+                }
+                sgMail
+                .send(msg)
+                .then(() => {
+                    console.log('Email sent')
+                })
+                .catch((error) => {
+                    console.error(error)
+                });
             }
         },
         deleteDocument: {
