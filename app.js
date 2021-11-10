@@ -60,7 +60,7 @@ app.use(authMw);
 
 app.use('/graphql', graphqlHTTP({
     schema,
-    graphiql: true
+    // graphiql: true
 }));
 
 
